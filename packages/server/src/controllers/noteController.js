@@ -1,15 +1,16 @@
 const Note = require("../models/noteModel");
 const mongoose = require("mongoose");
 
- const getAllNotes = async (req, res) => {
-  const notes = await Note.find();
+const getAllNotes = async (req, res) => {
+  const author = req.user._id;
+  const notes = await Note.find({ author }).sort({ createdAt: -1 });
   if (!notes) {
     res.status(400).json({ message: "No notes found" });
   }
   res.status(200).json(notes);
 };
 
- const getNote = async (req, res) => {
+const getNote = async (req, res) => {
   const note = await Note.findById(req.params.id);
   if (!note) {
     res.status(400).json({ message: "Note not found" });
@@ -24,12 +25,13 @@ const createNote = async (req, res) => {
       .status(400)
       .json({ message: "Please enter all the required fields" });
   }
-
-  const note = await Note.create(req.body);
-  if (!note) {
-    return res.status(400).json({ message: "Note could not be created" });
+  try {
+    const author = req.user._id;
+    const note = await Note.create({ title, content, author });
+    res.status(200).json(note);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
-  res.status(201).json(note);
 };
 
 const updateNote = async (req, res) => {
@@ -54,9 +56,7 @@ const deleteNote = async (req, res) => {
 
   const note = await Note.findOneAndDelete({ _id: id });
   res.status(200).json(note);
-}
-
-
+};
 
 module.exports = {
   getAllNotes,

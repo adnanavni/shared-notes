@@ -6,8 +6,11 @@ const {
   updateNote,
   deleteNote,
 } = require("../controllers/noteController");
+const requireAuth = require("../middleware/requireAuth");
 
 const noteRouter = express.Router();
+
+noteRouter.use(requireAuth);
 
 noteRouter.get("/", getAllNotes);
 noteRouter.get("/:id", getNote);

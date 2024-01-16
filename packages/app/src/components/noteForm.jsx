@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import styled from "styled-components";
 import { useNotesContext } from "../hooks/useNotesContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const StyledForm = styled.form`
@@ -13,6 +14,7 @@ const StyledForm = styled.form`
 
 export default function NoteForm() {
   const { dispatch } = useNotesContext();
+  const { user } = useAuthContext();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -27,10 +29,16 @@ export default function NoteForm() {
     } else {
       try {
         await axios
-          .post(backendUrl + "/api/notes", {
-            title: title,
-            content: content,
-          })
+          .post(
+            backendUrl + "/api/notes",
+            {
+              title: title,
+              content: content,
+            },
+            {
+              headers: { Authorization: `Bearer ${user.token}` },
+            }
+          )
           .then((res) => {
             setTitle("");
             setContent("");
@@ -42,11 +50,10 @@ export default function NoteForm() {
             setError(error);
           });
       } catch (error) {
-        console.info(error);
+        setError(error.message);
       }
     }
   };
-
   return (
     <StyledForm onSubmit={handleSubmit}>
       <h3>Add new note</h3>

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import PropTypes from "prop-types";
 import { useNotesContext } from "../hooks/useNotesContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 import axios from "axios";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -18,11 +19,15 @@ const StyledNote = styled.div`
 
 const Note = ({ note }) => {
   const { dispatch } = useNotesContext();
+  const { user } = useAuthContext();
 
   const handleClick = async () => {
     try {
       const response = await axios.delete(
-        backendUrl + "/api/notes/" + note._id
+        backendUrl + "/api/notes/" + note._id,
+        {
+          headers: { Authorization: "Bearer " + user.token },
+        }
       );
       if (response.status === 200) {
         dispatch({ type: "DELETE_NOTE", payload: response.data });
