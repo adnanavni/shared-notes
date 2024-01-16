@@ -1,9 +1,9 @@
 const express = require("express");
+const noteRouter = require("./routes/noteRoutes");
+const userRouter = require("./routes/userRoutes");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const noteRouter = require("./routes/noteRoutes");
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -17,14 +17,17 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/notes", noteRouter);
+app.use("/api/user", userRouter);
 
 mongoose
-  .connect(process.env.MONG_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONG_URI)
   .then(() => {
-    app.listen(port, () => {
-        console.log(`Server is running at http://localhost:${port}`);
-    });
+    console.log("Connected to MongoDB");
   })
-  .catch((error) => {
-    console.error("Connection error", error.message);
+  .catch((err) => {
+    console.log(err);
   });
+
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
+});
