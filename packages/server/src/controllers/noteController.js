@@ -1,4 +1,5 @@
 const Note = require("../models/noteModel");
+const mongoose = require("mongoose");
 
  const getAllNotes = async (req, res) => {
   const notes = await Note.find();
