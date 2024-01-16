@@ -23,7 +23,7 @@ const noteSchema = new mongoose.Schema(
     color: {
       type: String,
     },
-  }
+  },{timestamps: true}
 );
 
 module.exports = mongoose.model("Note", noteSchema);
