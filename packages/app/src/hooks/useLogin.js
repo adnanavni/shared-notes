@@ -14,15 +14,17 @@ export const useLogin = () => {
     setError(null);
 
     try {
-      const response = await axios.post(backendUrl+ "/api/user/login", { username, password });
-      localStorage.setItem('user', JSON.stringify(response.data));
+      const response = await axios.post(backendUrl + "/api/user/login", {
+        username,
+        password,
+      });
+      localStorage.setItem("user", JSON.stringify(response.data));
 
-      dispatch({ type: 'LOGIN', payload: response.data });
+      dispatch({ type: "LOGIN", payload: response.data });
       setIsLoading(false);
-
     } catch (err) {
       setIsLoading(false);
-      setError(err.response.data.error);
+      setError(err);
     }
   };
 

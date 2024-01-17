@@ -1,11 +1,20 @@
+import styled from "styled-components";
 import axios from "axios";
 import { useEffect } from "react";
 import Note from "../components/note";
-import NoteForm from "../components/noteForm";
 import { useNotesContext } from "../hooks/useNotesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+export const StyledMain = styled.main`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: #fffdd7;
+  justify-content: center;
+  min-height: 84vh;
+`;
 
 function MainView() {
   const { notes, dispatch } = useNotesContext();
@@ -25,12 +34,9 @@ function MainView() {
   }, [dispatch, user]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "row" }}>
-      <div>
-        {notes && notes.map((note) => <Note note={note} key={note._id} />)}
-      </div>
-      <NoteForm />
-    </div>
+    <StyledMain>
+      {notes && notes.map((note) => <Note note={note} key={note._id} />)}
+    </StyledMain>
   );
 }
 

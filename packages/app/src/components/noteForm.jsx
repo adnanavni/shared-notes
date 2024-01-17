@@ -1,6 +1,7 @@
+import styled from "styled-components";
+import { StyledButton } from "./navBar";
 import axios from "axios";
 import { useState } from "react";
-import styled from "styled-components";
 import { useNotesContext } from "../hooks/useNotesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -27,21 +28,23 @@ export default function NoteForm() {
       setError("Title and content are required");
       return;
     } else {
-      let collaborators = [];
-      const usernames = collaboratorsInput.split(",");
-
       try {
-        for (const username of usernames) {
-          try {
-            const res = await axios.get(backendUrl + "/api/user", {
-              params: {
-                username: username.trim(),
-              },
-            });
+        let collaborators = [];
+        if (collaboratorsInput.length > 0) {
+          const usernames = collaboratorsInput.split(",");
 
-            collaborators.push(res.data._id);
-          } catch (error) {
-            setError(error.message);
+          for (const username of usernames) {
+            try {
+              const res = await axios.get(backendUrl + "/api/user", {
+                params: {
+                  username: username.trim(),
+                },
+              });
+
+              collaborators.push(res.data._id);
+            } catch (error) {
+              setError(error.message);
+            }
           }
         }
 

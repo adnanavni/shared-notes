@@ -9,8 +9,38 @@ const StyledNavBar = styled.nav`
   align-items: center;
   padding: 0 1rem;
   height: 4rem;
-  background-color: #fff;
-  border-bottom: 1px solid #000000;
+  background-color: #424133;
+  color: #ffffff;
+  border-bottom: 2px solid #000000;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: #ffffff;
+  margin: 1rem;
+  font-size: 1.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+`;
+
+const StyledButton = styled.button`
+  background-color: #c3c19d;
+  font-family: "Roboto Mono", monospace;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #424133;
+    color: white;
+  }
+`;
+
+const StyledSpan = styled.span`
+  margin-right: 1rem;
 `;
 
 export default function NavBar() {
@@ -22,24 +52,20 @@ export default function NavBar() {
   };
 
   return (
-    <StyledNavBar>
-      <Link to="/">
-        <h1>Shared Notes</h1>
-      </Link>
-      <nav>
+    <header>
+      <StyledNavBar>
+        <StyledLink to="/">
+          <h1>Shared Notes</h1>
+        </StyledLink>
+
         {user && (
           <div>
-            <span>{user.user.username}</span>
-            <button onClick={handleClick}>Log out</button>
+            <StyledSpan>{user.user.username}</StyledSpan>
+            <StyledButton onClick={handleClick}>Log out</StyledButton>
           </div>
         )}
-        {!user && (
-          <div>
-            <Link to="/login">Login</Link>
-            <Link to="/signup">Signup</Link>
-          </div>
-        )}
-      </nav>
-    </StyledNavBar>
+        {!user && <StyledLink to="/login">Login</StyledLink>}
+      </StyledNavBar>
+    </header>
   );
 }

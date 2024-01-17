@@ -6,14 +6,11 @@ const StyledFooter = styled.footer`
   align-items: center;
   padding: 0 1rem;
   height: 4rem;
-  background-color: #fff;
+  background-color: #424133;
+  color: #ffffff;
   border-top: 1px solid #000000;
 `;
 
 export default function Footer() {
-  return (
-    <StyledFooter>
-      <div>footer</div>
-    </StyledFooter>
-  );
+  return <StyledFooter>© Adnan Avni</StyledFooter>;
 }
