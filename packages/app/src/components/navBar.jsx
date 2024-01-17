@@ -11,7 +11,7 @@ const StyledNavBar = styled.nav`
   height: 4rem;
   background-color: #424133;
   color: #ffffff;
-  border-bottom: 2px solid #000000;
+  border-bottom: 3px solid #000000;
 `;
 
 const StyledLink = styled(Link)`
@@ -22,6 +22,10 @@ const StyledLink = styled(Link)`
 
   @media (max-width: 768px) {
     font-size: 1rem;
+  }
+
+  &:hover {
+    color: black;
   }
 `;
 
@@ -39,8 +43,21 @@ const StyledButton = styled.button`
   }
 `;
 
+const StyledNavPartWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
 const StyledSpan = styled.span`
   margin-right: 1rem;
+
+  @media (max-width: 768px) {
+    margin-right: 0;
+  }
 `;
 
 export default function NavBar() {
@@ -59,10 +76,10 @@ export default function NavBar() {
         </StyledLink>
 
         {user && (
-          <div>
+          <StyledNavPartWrapper>
             <StyledSpan>{user.user.username}</StyledSpan>
             <StyledButton onClick={handleClick}>Log out</StyledButton>
-          </div>
+          </StyledNavPartWrapper>
         )}
         {!user && <StyledLink to="/login">Login</StyledLink>}
       </StyledNavBar>

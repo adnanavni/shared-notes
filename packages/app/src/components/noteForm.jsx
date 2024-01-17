@@ -1,16 +1,19 @@
 import styled from "styled-components";
-import { StyledButton } from "./navBar";
+import { StyledForm, StyledInput, StyledButton } from "../views/loginView";
 import axios from "axios";
 import { useState } from "react";
 import { useNotesContext } from "../hooks/useNotesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  margin: 0 auto;
+const StyledTextArea = styled.textarea`
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #000000;
+  border-radius: 0.5rem;
+  width: 15rem;
+  height: 10rem;
+  text-align: center;
 `;
 
 export default function NoteForm() {
@@ -40,10 +43,11 @@ export default function NoteForm() {
                   username: username.trim(),
                 },
               });
+              console.info(res.data);
 
               collaborators.push(res.data._id);
             } catch (error) {
-              setError(error.message);
+              setError(error);
             }
           }
         }
@@ -72,36 +76,36 @@ export default function NoteForm() {
             setError(error);
           });
       } catch (error) {
-        setError(error.message);
+        setError(error);
       }
     }
   };
 
   return (
     <StyledForm onSubmit={handleSubmit}>
-      <h3>Add new note</h3>
+      <h2>Add new note</h2>
       {error && <p>{error.message}</p>}
-      <input
+      <StyledInput
         id="title"
         type="text"
         placeholder="title"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
       />
-      <textarea
+      <StyledTextArea
         id="content"
-        placeholder="note"
+        placeholder="content"
         onChange={(e) => setContent(e.target.value)}
         value={content}
       />
-      <input
+      <StyledInput
         id="collaborators"
         type="text"
         placeholder="collaborators"
         onChange={(e) => setCollaboratorsInput(e.target.value)}
         value={collaboratorsInput}
       />
-      <button type="submit">Submit</button>
+      <StyledButton type="submit">Submit</StyledButton>
     </StyledForm>
   );
 }

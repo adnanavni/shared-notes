@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { useNotesContext } from "../hooks/useNotesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -13,21 +14,33 @@ const StyledNote = styled.section`
   margin: 1rem;
   padding: 1rem;
   width: 20rem;
-  max-height: 12rem;
+  min-height: 12rem;
   text-align: center;
   align-items: center;
   justify-content: center;
   border: 0.1px solid #000000;
   box-shadow: 0 0 0.75rem 0.1rem rgba(0, 0, 0, 0.5);
   border-radius: 0.5rem;
+  overflow: hidden;
+`;
+
+const Styledh3 = styled.h3`
+  overflow: hidden;
+`;
+
+const StyledParagraph = styled.p`
+  height: 3rem;
+  width: 80%;
+  overflow: hidden;
 `;
 
 const StyledButtonWrapper = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   justify-content: space-evenly;
   align-items: center;
+  gap: 0.5rem;
 `;
 
 const StyledButton = styled.button`
@@ -44,13 +57,12 @@ const StyledButton = styled.button`
   }
 `;
 
-const StyledSpan = styled.span`
-  margin-top: 5rem;
-`;
+const StyledSpan = styled.span``;
 
 const Note = ({ note }) => {
   const { dispatch } = useNotesContext();
   const { user } = useAuthContext();
+  const [author, setAuthor] = useState("");
 
   const handleClick = async () => {
     try {
@@ -68,13 +80,26 @@ const Note = ({ note }) => {
     }
   };
 
+  useEffect(() => {
+    const fetchAuthor = async () => {
+      const response = await axios.get(backendUrl + "/api/user/", {
+        params: { id: note.author },
+      });
+      if (response.status === 200) {
+        setAuthor(response.data.username);
+      }
+    };
+    fetchAuthor();
+  });
+
   return (
     <StyledNote>
-      <h3>{note.title}</h3>
-      <p>{note.content}</p>
-
+      {note.author !== user.user._id && (
+        <StyledParagraph>{author}</StyledParagraph>
+      )}
+      <Styledh3>{note.title}</Styledh3>
+      <StyledParagraph>{note.content}</StyledParagraph>
       <StyledButtonWrapper>
-        <StyledButton onClick={() => null}>Edit</StyledButton>
         <StyledSpan>
           {formatDistanceToNow(new Date(note.createdAt), { addSuffix: true })}
         </StyledSpan>

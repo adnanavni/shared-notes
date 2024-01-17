@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthContext } from "./hooks/useAuthContext";
-import Home from "./views/mainView";
+import MainView from "./views/mainView";
 import Login from "./views/loginView";
 import Signup from "./views/signUpView";
 import NavBar from "./components/navBar";
 import Footer from "./components/footer";
+import NewNoteView from "./views/newNoteView";
 
 function App() {
   const { user } = useAuthContext();
@@ -15,7 +16,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={user ? <Home /> : <Navigate to="/login" />}
+            element={user ? <MainView /> : <Navigate to="/login" />}
           />
           <Route
             path="/login"
@@ -24,6 +25,11 @@ function App() {
           <Route
             path="/signup"
             element={!user ? <Signup /> : <Navigate to="/" />}
+          />
+
+          <Route
+            path="/createnote"
+            element={user ? <NewNoteView /> : <Navigate to="/login" />}
           />
         </Routes>
         <Footer />

@@ -24,7 +24,6 @@ const getNote = async (req, res) => {
 const createNote = async (req, res) => {
   const { title, content, collaborators } = req.body;
 
-  console.log(req.body);
   if (!title || !content) {
     return res
       .status(400)
