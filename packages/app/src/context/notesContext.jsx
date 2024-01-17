@@ -1,6 +1,4 @@
 import { createContext, useReducer } from "react";
-import PropTypes from "prop-types";
-
 export const NotesContext = createContext();
 
 export const notesReducer = (state, action) => {
@@ -22,6 +20,7 @@ export const notesReducer = (state, action) => {
   }
 };
 
+// eslint-disable-next-line react/prop-types
 export const NotesContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(notesReducer, {
     notes: null,
@@ -32,8 +31,4 @@ export const NotesContextProvider = ({ children }) => {
       {children}
     </NotesContext.Provider>
   );
-};
-
-NotesContextProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };

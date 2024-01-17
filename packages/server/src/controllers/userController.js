@@ -31,7 +31,20 @@ const signupUser = async (req, res) => {
   }
 };
 
+const getUser = async (req, res) => {
+  const { username } = req.query;
+
+  try {
+    const user = await User.findOne({ username });
+    const _id = user._id;
+    res.status(200).json({ user, _id });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
 module.exports = {
   loginUser,
-  signupUser
+  signupUser,
+  getUser,
 };

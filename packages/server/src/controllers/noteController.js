@@ -3,7 +3,10 @@ const mongoose = require("mongoose");
 
 const getAllNotes = async (req, res) => {
   const author = req.user._id;
-  const notes = await Note.find({ author }).sort({ createdAt: -1 });
+  const userId = req.user._id;
+  const notes = await Note.find({
+    $or: [{ author: userId }, { collaborators: userId }],
+  }).sort({ createdAt: -1 });
   if (!notes) {
     res.status(400).json({ message: "No notes found" });
   }
@@ -19,7 +22,9 @@ const getNote = async (req, res) => {
 };
 
 const createNote = async (req, res) => {
-  const { title, content } = req.body;
+  const { title, content, collaborators } = req.body;
+
+  console.log(req.body);
   if (!title || !content) {
     return res
       .status(400)
@@ -27,7 +32,7 @@ const createNote = async (req, res) => {
   }
   try {
     const author = req.user._id;
-    const note = await Note.create({ title, content, author });
+    const note = await Note.create({ title, content, author, collaborators });
     res.status(200).json(note);
   } catch (error) {
     res.status(400).json({ error: error.message });

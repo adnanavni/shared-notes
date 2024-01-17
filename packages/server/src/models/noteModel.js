@@ -14,16 +14,12 @@ const noteSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    collaborators: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    collaborators: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     color: {
       type: String,
     },
-  },{timestamps: true}
+  },
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Note", noteSchema);

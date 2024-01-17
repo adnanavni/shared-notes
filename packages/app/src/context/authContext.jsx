@@ -1,5 +1,4 @@
 import { createContext, useReducer, useEffect } from "react";
-import PropTypes from "prop-types";
 
 export const AuthContext = createContext();
 
@@ -14,6 +13,7 @@ export const authReducer = (state, action) => {
   }
 };
 
+// eslint-disable-next-line react/prop-types
 export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, {
     user: null,
@@ -27,15 +27,9 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, []);
 
-  console.info("AuthContext state:", state);
-
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-AuthContextProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
