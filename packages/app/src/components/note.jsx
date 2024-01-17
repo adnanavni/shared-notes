@@ -5,6 +5,7 @@ import { useNotesContext } from "../hooks/useNotesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -66,6 +67,11 @@ const Note = ({ note }) => {
   const { dispatch } = useNotesContext();
   const { user } = useAuthContext();
   const [author, setAuthor] = useState("");
+  const navigate = useNavigate();
+
+  const handleSectionClick = () => {
+    navigate(`/note/${note._id}`);
+  };
 
   const handleClick = async () => {
     try {
@@ -98,7 +104,7 @@ const Note = ({ note }) => {
   });
 
   return (
-    <StyledNote>
+    <StyledNote onClick={handleSectionClick}>
       {note.author !== user.user._id && (
         <StyledSpan>
           <u>{author}</u>

@@ -6,6 +6,7 @@ import Signup from "./views/signUpView";
 import NavBar from "./components/navBar";
 import Footer from "./components/footer";
 import NewNoteView from "./views/newNoteView";
+import NoteView from "./views/noteView";
 
 function App() {
   const { user } = useAuthContext();
@@ -30,6 +31,10 @@ function App() {
           <Route
             path="/createnote"
             element={user ? <NewNoteView /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/note/:id"
+            element={user ? <NoteView /> : <Navigate to="/login" />}
           />
         </Routes>
         <Footer />

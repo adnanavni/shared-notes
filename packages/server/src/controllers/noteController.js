@@ -2,7 +2,6 @@ const Note = require("../models/noteModel");
 const mongoose = require("mongoose");
 
 const getAllNotes = async (req, res) => {
-  const author = req.user._id;
   const userId = req.user._id;
   const notes = await Note.find({
     $or: [{ author: userId }, { collaborators: userId }],
