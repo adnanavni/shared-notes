@@ -17,6 +17,13 @@ export const StyledInput = styled.input`
   border-radius: 0.5rem;
   width: 15rem;
   text-align: center;
+  background-color: #fffef3;
+
+  &:focus {
+    outline: none;
+    background-color: #424133;
+    color: white;
+  }
 `;
 
 export const StyledButton = styled.button`

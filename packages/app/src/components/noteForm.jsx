@@ -14,6 +14,17 @@ const StyledTextArea = styled.textarea`
   width: 15rem;
   height: 10rem;
   text-align: center;
+  background-color: #fffef3;
+
+  &:focus {
+    outline: none;
+    background-color: #424133;
+    color: white;
+  }
+`;
+
+const StyledLabel = styled.label`
+  text-align: center;
 `;
 
 export default function NoteForm() {
@@ -98,6 +109,9 @@ export default function NoteForm() {
         onChange={(e) => setContent(e.target.value)}
         value={content}
       />
+      <StyledLabel htmlFor="collaborators">
+        In case of multiple users, <br /> use comma to separate usernames
+      </StyledLabel>
       <StyledInput
         id="collaborators"
         type="text"

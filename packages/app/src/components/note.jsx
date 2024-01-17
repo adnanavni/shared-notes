@@ -26,12 +26,15 @@ const StyledNote = styled.section`
 
 const Styledh3 = styled.h3`
   overflow: hidden;
+  margin: 0.2rem;
 `;
 
 const StyledParagraph = styled.p`
-  height: 3rem;
+  margin: 0.2rem;
+  height: 2.5rem;
   width: 80%;
   overflow: hidden;
+  underline: true;
 `;
 
 const StyledButtonWrapper = styled.div`
@@ -81,21 +84,25 @@ const Note = ({ note }) => {
   };
 
   useEffect(() => {
-    const fetchAuthor = async () => {
-      const response = await axios.get(backendUrl + "/api/user/", {
-        params: { id: note.author },
-      });
-      if (response.status === 200) {
-        setAuthor(response.data.username);
-      }
-    };
-    fetchAuthor();
+    if (note.author !== user.user._id) {
+      const fetchAuthor = async () => {
+        const response = await axios.get(backendUrl + "/api/user/", {
+          params: { id: note.author },
+        });
+        if (response.status === 200) {
+          setAuthor(response.data.name);
+        }
+      };
+      fetchAuthor();
+    }
   });
 
   return (
     <StyledNote>
       {note.author !== user.user._id && (
-        <StyledParagraph>{author}</StyledParagraph>
+        <StyledSpan>
+          <u>{author}</u>
+        </StyledSpan>
       )}
       <Styledh3>{note.title}</Styledh3>
       <StyledParagraph>{note.content}</StyledParagraph>
