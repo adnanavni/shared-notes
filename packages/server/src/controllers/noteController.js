@@ -15,7 +15,7 @@ const getAllNotes = async (req, res) => {
 const getNote = async (req, res) => {
   const note = await Note.findById(req.params.id);
   if (!note) {
-    res.status(400).json({ message: "Note not found" });
+    return res.status(400).json({ message: "Note not found" });
   }
   res.status(200).json(note);
 };
@@ -44,10 +44,17 @@ const updateNote = async (req, res) => {
     return res.status(400).json({ message: "Invalid ID" });
   }
 
-  const note = await Note.findByIdAndUpdate({ _id: id }, req.body, {
-    new: true,
-  });
-  res.status(200).json(note);
+  try {
+    const note = await Note.findByIdAndUpdate({ _id: id }, req.body, {
+      new: true,
+    });
+    res.status(200).json(note);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the note" });
+  }
 };
 
 const deleteNote = async (req, res) => {
@@ -57,8 +64,15 @@ const deleteNote = async (req, res) => {
     return res.status(400).json({ message: "Invalid ID" });
   }
 
-  const note = await Note.findOneAndDelete({ _id: id });
-  res.status(200).json(note);
+  try {
+    const note = await Note.findByIdAndDelete(id);
+    res.status(200).json(note);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the note" });
+  }
 };
 
 module.exports = {

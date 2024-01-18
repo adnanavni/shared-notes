@@ -69,7 +69,7 @@ const Note = ({ note }) => {
   const [author, setAuthor] = useState("");
   const navigate = useNavigate();
 
-  const handleSectionClick = () => {
+  const handleEditClick = () => {
     navigate(`/note/${note._id}`);
   };
 
@@ -104,7 +104,7 @@ const Note = ({ note }) => {
   });
 
   return (
-    <StyledNote onClick={handleSectionClick}>
+    <StyledNote>
       {note.author !== user.user._id && (
         <StyledSpan>
           <u>{author}</u>
@@ -116,7 +116,10 @@ const Note = ({ note }) => {
         <StyledSpan>
           {formatDistanceToNow(new Date(note.createdAt), { addSuffix: true })}
         </StyledSpan>
-        <StyledButton onClick={handleClick}>Delete</StyledButton>
+        <div style={{ display: "flex", gap: "1rem" }}>
+          <StyledButton onClick={handleEditClick}>Edit</StyledButton>
+          <StyledButton onClick={handleClick}>Delete</StyledButton>
+        </div>
       </StyledButtonWrapper>
     </StyledNote>
   );

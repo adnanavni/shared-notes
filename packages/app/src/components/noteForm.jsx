@@ -6,7 +6,7 @@ import { useNotesContext } from "../hooks/useNotesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-const StyledTextArea = styled.textarea`
+export const StyledTextArea = styled.textarea`
   margin: 0.5rem;
   padding: 0.5rem;
   border: 1px solid #000000;
