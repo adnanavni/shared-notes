@@ -23,7 +23,6 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          cd packages/server
           npm install
           npm run build --if-present
           npm run test --if-present
@@ -59,5 +58,5 @@ jobs:
         with:
           app-name: 'adnanavni-sharednotes'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5798B757744E49FCB7FBE68F29BCE214 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EB2937D7265E421DB2B6E0C54E29633A }}
           package: .
