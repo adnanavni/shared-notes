@@ -20,9 +20,9 @@ To get started, follow these steps:
 
 3. Install dependencies for both frontend and backend:
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 ## Running the application
 
@@ -51,4 +51,5 @@ This command starts the Express.js server for the backend.
 Note: Ensure that you have MongoDB installed and running, as the application uses MongoDB as its database.
 
 ### App
-![app](/images/README-img.png)
+
+![app](/images/README-img.PNG)
