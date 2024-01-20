@@ -16,16 +16,16 @@ const StyledNavBar = styled.nav`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
-  color: #ffffff;
+  color: #fffdd7;
   margin: 1rem;
-  font-size: 1.5rem;
+  font-size: 2rem;
 
   @media (max-width: 768px) {
     font-size: 1rem;
   }
 
   &:hover {
-    color: black;
+    color: #c3c19d;
   }
 `;
 
@@ -54,7 +54,7 @@ const StyledNavPartWrapper = styled.div`
 
 const StyledSpan = styled.span`
   margin-right: 1rem;
-
+  cursor: default;
   @media (max-width: 768px) {
     margin-right: 0;
   }
@@ -71,9 +71,7 @@ export default function NavBar() {
   return (
     <header>
       <StyledNavBar>
-        <StyledLink to="/">
-          <h1>Shared Notes</h1>
-        </StyledLink>
+        <StyledLink to="/">Shared Notes</StyledLink>
 
         {user && (
           <StyledNavPartWrapper>

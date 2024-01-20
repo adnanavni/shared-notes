@@ -15,6 +15,7 @@ const NoteView = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [collaboratorNames, setCollaboratorNames] = useState([]);
+  const [collaboratorID, setCollaboratorID] = useState([]);
   const [collab, setCollab] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +29,7 @@ const NoteView = () => {
       setTitle(result.data.title);
       setContent(result.data.content);
       setLoading(false);
-
+      setCollaboratorID(result.data.collaborators);
       const collaboratorIDs = result.data.collaborators;
       const usernames = [];
       for (let i = 0; i < collaboratorIDs.length; i++) {
@@ -66,10 +67,7 @@ const NoteView = () => {
                 username: username.trim(),
               },
             });
-            console.info(res.data);
-
             collaborators.push(res.data._id);
-            console.log(collaborators);
           } catch (error) {
             console.error(error);
           }
@@ -119,12 +117,17 @@ const NoteView = () => {
           placeholder={content}
           onChange={(e) => setContent(e.target.value)}
         />
-        <label>Collaborators</label>
-        <StyledInput
-          type="text"
-          placeholder={collaboratorNames}
-          onChange={(e) => setCollaboratorNames(e.target.value)}
-        />
+        {collaboratorID == user._id && (
+          <>
+            <label>Collaborators</label>
+            <StyledInput
+              type="text"
+              placeholder={collaboratorNames}
+              onChange={(e) => setCollaboratorNames(e.target.value)}
+            />
+          </>
+        )}
+
         <StyledButton type="submit">Save</StyledButton>
       </StyledForm>
     </StyledMain>

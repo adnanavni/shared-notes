@@ -26,7 +26,7 @@ const StyledRoundButton = styled(Link)`
   bottom: 5rem;
   text-decoration: none;
   color: black;
-  left: 50%;
+  left: 90%;
   transform: translateX(-50%);
   width: 4rem;
   border-radius: 50%;
@@ -61,8 +61,17 @@ function MainView() {
 
   return (
     <StyledMain>
-      {notes && notes.map((note) => <Note note={note} key={note._id} />)}
-      <StyledRoundButton to={"/createnote"}>+</StyledRoundButton>
+      {notes && notes.length === 0 && <h1>No notes yet</h1>}
+      {!notes ? (
+        <h1>Loading...</h1>
+      ) : (
+        <>
+          {notes.map((note) => (
+            <Note note={note} key={note._id} />
+          ))}
+          <StyledRoundButton to={"/createnote"}>+</StyledRoundButton>
+        </>
+      )}
     </StyledMain>
   );
 }

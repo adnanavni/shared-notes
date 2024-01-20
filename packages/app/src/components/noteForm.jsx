@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNotesContext } from "../hooks/useNotesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export const StyledTextArea = styled.textarea`
@@ -34,12 +35,21 @@ export default function NoteForm() {
   const [content, setContent] = useState("");
   const [collaboratorsInput, setCollaboratorsInput] = useState([]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const validateForm = () => {
+    if (!title || !content) {
+      setError("Title and content are required");
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let errorCollab = false;
 
-    if (!title || !content) {
-      setError("Title and content are required");
+    if (!validateForm()) {
       return;
     } else {
       try {
@@ -54,38 +64,43 @@ export default function NoteForm() {
                   username: username.trim(),
                 },
               });
-              console.info(res.data);
-
               collaborators.push(res.data._id);
             } catch (error) {
-              setError(error);
+              setError(error.response.data);
+              errorCollab = true;
             }
           }
         }
 
-        await axios
-          .post(
-            backendUrl + "/api/notes",
-            {
-              title: title,
-              content: content,
-              collaborators: collaborators,
-            },
-            {
-              headers: { Authorization: `Bearer ${user.token}` },
-            }
-          )
-          .then((res) => {
-            setTitle("");
-            setContent("");
-            setCollaboratorsInput("");
-            setError("");
-            dispatch({ type: "CREATE_NOTE", payload: res.data });
-            console.info(res.data);
-          })
-          .catch((error) => {
-            setError(error);
-          });
+        if (errorCollab) {
+          return;
+        } else {
+          await axios
+            .post(
+              backendUrl + "/api/notes",
+              {
+                title: title,
+                content: content,
+                collaborators: collaborators,
+              },
+              {
+                headers: { Authorization: `Bearer ${user.token}` },
+              }
+            )
+            .then((res) => {
+              setTitle("");
+              setContent("");
+              setCollaboratorsInput("");
+              setError("");
+              dispatch({ type: "CREATE_NOTE", payload: res.data });
+              alert("Note created successfully");
+              navigate("/");
+            })
+            .catch((error) => {
+              setError(error);
+              alert("Note creation failed");
+            });
+        }
       } catch (error) {
         setError(error);
       }
@@ -99,15 +114,15 @@ export default function NoteForm() {
       <StyledInput
         id="title"
         type="text"
-        placeholder="title"
+        placeholder="title*(20)"
         onChange={(e) => setTitle(e.target.value)}
-        value={title}
+        maxLength={20}
       />
       <StyledTextArea
         id="content"
-        placeholder="content"
+        placeholder="content*(200)"
         onChange={(e) => setContent(e.target.value)}
-        value={content}
+        maxLength={200}
       />
       <StyledLabel htmlFor="collaborators">
         In case of multiple users, <br /> use comma to separate usernames
@@ -117,7 +132,6 @@ export default function NoteForm() {
         type="text"
         placeholder="collaborators"
         onChange={(e) => setCollaboratorsInput(e.target.value)}
-        value={collaboratorsInput}
       />
       <StyledButton type="submit">Submit</StyledButton>
     </StyledForm>

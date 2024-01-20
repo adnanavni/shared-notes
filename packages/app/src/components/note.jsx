@@ -1,9 +1,9 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components";
+import axios from "axios";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import PropTypes from "prop-types";
 import { useNotesContext } from "../hooks/useNotesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -16,35 +16,39 @@ const StyledNote = styled.section`
   padding: 1rem;
   width: 20rem;
   min-height: 12rem;
+  max-height: 20rem;
   text-align: center;
   align-items: center;
   justify-content: center;
   border: 0.1px solid #000000;
   box-shadow: 0 0 0.75rem 0.1rem rgba(0, 0, 0, 0.5);
   border-radius: 0.5rem;
-  overflow: hidden;
+  background-color: #2;
 `;
 
-const Styledh3 = styled.h3`
-  overflow: hidden;
-  margin: 0.2rem;
+const StyledTitle = styled.div`
+  font-size: 1.5rem;
+  height: 10%;
+  font-weight: bold;
 `;
 
-const StyledParagraph = styled.p`
-  margin: 0.2rem;
-  height: 2.5rem;
+const StyledContent = styled.div`
   width: 80%;
+  height: 80%;
   overflow: hidden;
-  underline: true;
+  word-wrap: break-word;
+  margin: 0.25rem;
 `;
 
 const StyledButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 10%;
   justify-content: space-evenly;
   align-items: center;
   gap: 0.5rem;
+  padding: 0.5rem 0.5rem;
 `;
 
 const StyledButton = styled.button`
@@ -61,31 +65,38 @@ const StyledButton = styled.button`
   }
 `;
 
-const StyledSpan = styled.span``;
+const Button = ({ onClick, children }) => (
+  <StyledButton onClick={onClick}>{children}</StyledButton>
+);
 
 const Note = ({ note }) => {
   const { dispatch } = useNotesContext();
   const { user } = useAuthContext();
   const [author, setAuthor] = useState("");
   const navigate = useNavigate();
+  let timestamp;
 
   const handleEditClick = () => {
     navigate(`/note/${note._id}`);
   };
 
   const handleClick = async () => {
-    try {
-      const response = await axios.delete(
-        backendUrl + "/api/notes/" + note._id,
-        {
-          headers: { Authorization: "Bearer " + user.token },
+    const userResponse = confirm("Are you sure you want to delete this note?");
+    if (!userResponse) return;
+    else {
+      try {
+        const response = await axios.delete(
+          backendUrl + "/api/notes/" + note._id,
+          {
+            headers: { Authorization: "Bearer " + user.token },
+          }
+        );
+        if (response.status === 200) {
+          dispatch({ type: "DELETE_NOTE", payload: response.data });
         }
-      );
-      if (response.status === 200) {
-        dispatch({ type: "DELETE_NOTE", payload: response.data });
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -103,30 +114,34 @@ const Note = ({ note }) => {
     }
   });
 
+  if (note.updatedAt > note.createdAt) {
+    timestamp = note.updatedAt;
+  } else {
+    timestamp = note.createdAt;
+  }
+
   return (
     <StyledNote>
       {note.author !== user.user._id && (
-        <StyledSpan>
+        <span>
           <u>{author}</u>
-        </StyledSpan>
+        </span>
       )}
-      <Styledh3>{note.title}</Styledh3>
-      <StyledParagraph>{note.content}</StyledParagraph>
+      <StyledTitle>{note.title}</StyledTitle>
+      <StyledContent>
+        <p>{note.content}</p>
+      </StyledContent>
       <StyledButtonWrapper>
-        <StyledSpan>
-          {formatDistanceToNow(new Date(note.createdAt), { addSuffix: true })}
-        </StyledSpan>
+        <span>
+          {formatDistanceToNow(new Date(timestamp), { addSuffix: true })}
+        </span>
         <div style={{ display: "flex", gap: "1rem" }}>
-          <StyledButton onClick={handleEditClick}>Edit</StyledButton>
-          <StyledButton onClick={handleClick}>Delete</StyledButton>
+          <Button onClick={handleEditClick}>Edit</Button>
+          <Button onClick={handleClick}>Delete</Button>
         </div>
       </StyledButtonWrapper>
     </StyledNote>
   );
-};
-
-Note.propTypes = {
-  note: PropTypes.object.isRequired,
 };
 
 export default Note;
